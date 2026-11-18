@@ -99,7 +99,7 @@ function App() {
 
   const handleSaveHood = async (customMap = null) => {
     if (!operador.trim()) {
-      setFeedback({ type: "error", text: "Informe o nome do operador no topo da pÃ¡gina." });
+      setFeedback({ type: "error", text: "Informe o nome do operador no topo da página." });
       return;
     }
     setLoading(true);
@@ -114,7 +114,7 @@ function App() {
       });
       await loadSample();
       await loadEvaluation(limiar);
-      setFeedback({ type: "ok", text: `VizinhanÃ§a #${selectedHood} salva com sucesso.` });
+      setFeedback({ type: "ok", text: `Vizinhança #${selectedHood} salva com sucesso.` });
     } catch (e) {
       setFeedback({ type: "error", text: e.message });
     } finally {
@@ -186,7 +186,7 @@ function App() {
               </span>
             </div>
             <h1 className="text-xl font-bold tracking-tight mt-0.5">
-              DeduplicaÃ§Ã£o de Cadastros de Clientes
+              Deduplicação de Cadastros de Clientes
             </h1>
           </div>
 
@@ -224,7 +224,7 @@ function App() {
           {[
             { id: "marcar", label: "1. Marcar Gabarito (Cego)" },
             { id: "amostra", label: "2. Amostra Estratificada (100)" },
-            { id: "metricas", label: "3. MÃ©tricas (PrecisÃ£o & RevocaÃ§Ã£o)" },
+            { id: "metricas", label: "3. Métricas (Precisão & Revocação)" },
             { id: "pipeline", label: "4. Pipeline & Blocking (3.000)" },
           ].map((t) => (
             <button
@@ -266,13 +266,13 @@ function App() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <h2 className="text-base font-bold text-slate-800">
-                    MarcaÃ§Ã£o Cega por VizinhanÃ§a
+                    Marcação Cega por Vizinhança
                   </h2>
                   <p className="text-sm text-slate-600 mt-0.5">
-                    Registros com o <strong>mesmo rÃ³tulo</strong> na coluna{" "}
+                    Registros com o <strong>mesmo rótulo</strong> na coluna{" "}
                     <code className="bg-slate-100 px-1.5 py-0.5 rounded text-xs">pessoa</code>{" "}
-                    indicam a mesma pessoa real. PontuaÃ§Ãµes e sugestÃµes do sistema ficam ocultas
-                    para nÃ£o enviesar o gabarito.
+                    indicam a mesma pessoa real. Pontuações e sugestões do sistema ficam ocultas
+                    para não enviesar o gabarito.
                   </p>
                 </div>
 
@@ -294,7 +294,7 @@ function App() {
                   >
                     {hoods.map((h) => (
                       <option key={h} value={h}>
-                        VizinhanÃ§a #{h}
+                        Vizinhança #{h}
                       </option>
                     ))}
                   </select>
@@ -314,7 +314,7 @@ function App() {
                       <th className="px-3 py-2.5">Telefone</th>
                       <th className="px-3 py-2.5">E-mail</th>
                       <th className="px-3 py-2.5">Cidade/UF</th>
-                      <th className="px-3 py-2.5 w-44">RÃ³tulo (Pessoa)</th>
+                      <th className="px-3 py-2.5 w-44">Rótulo (Pessoa)</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
@@ -372,21 +372,21 @@ function App() {
                     disabled={loading}
                     className="bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
                   >
-                    Salvar RÃ³tulos
+                    Salvar Rótulos
                   </button>
                   <button
                     onClick={handleMarkSamePerson}
                     disabled={loading}
                     className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-3.5 py-2 rounded-lg transition-colors"
                   >
-                    Todos sÃ£o a mesma pessoa (V{selectedHood})
+                    Todos são a mesma pessoa (V{selectedHood})
                   </button>
                   <button
                     onClick={handleMarkDistinctPeople}
                     disabled={loading}
                     className="bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium px-3.5 py-2 rounded-lg transition-colors"
                   >
-                    Cada registro Ã© uma pessoa diferente
+                    Cada registro é uma pessoa diferente
                   </button>
                 </div>
 
@@ -398,7 +398,7 @@ function App() {
                     }}
                     className="px-3 py-1.5 text-xs font-medium border border-slate-300 rounded-lg hover:bg-slate-100"
                   >
-                    â† Anterior
+                    ← Anterior
                   </button>
                   <button
                     onClick={() => {
@@ -407,7 +407,7 @@ function App() {
                     }}
                     className="px-3 py-1.5 text-xs font-medium border border-slate-300 rounded-lg hover:bg-slate-100"
                   >
-                    PrÃ³xima â†’
+                    Próxima →
                   </button>
                 </div>
               </div>
@@ -421,17 +421,17 @@ function App() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <h2 className="text-base font-bold text-slate-800">
-                  Amostra Estratificada (100 registros em 49 vizinhanÃ§as)
+                  Amostra Estratificada (100 registros em 49 vizinhanças)
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Consulte todos os registros sorteados e seus respectivos rÃ³tulos no gabarito.
+                  Consulte todos os registros sorteados e seus respectivos rótulos no gabarito.
                 </p>
               </div>
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Filtrar por nome, CPF, cidade ou rÃ³tulo..."
+                placeholder="Filtrar por nome, CPF, cidade ou rótulo..."
                 className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm w-full sm:w-80"
               />
             </div>
@@ -463,10 +463,10 @@ function App() {
                       </td>
                       <td className="px-3 py-2 text-xs">{r.sistema_origem}</td>
                       <td className="px-3 py-2 font-medium">{r.nome}</td>
-                      <td className="px-3 py-2 font-mono text-xs">{r.cpf || "â€”"}</td>
-                      <td className="px-3 py-2 font-mono text-xs">{r.data_nascimento || "â€”"}</td>
+                      <td className="px-3 py-2 font-mono text-xs">{r.cpf || "—"}</td>
+                      <td className="px-3 py-2 font-mono text-xs">{r.data_nascimento || "—"}</td>
                       <td className="px-3 py-2 font-mono text-xs">{r.telefone}</td>
-                      <td className="px-3 py-2 text-xs">{r.email || "â€”"}</td>
+                      <td className="px-3 py-2 text-xs">{r.email || "—"}</td>
                       <td className="px-3 py-2 text-xs">
                         {r.cidade}/{r.uf}
                       </td>
@@ -481,7 +481,7 @@ function App() {
           </div>
         )}
 
-        {/* TAB 3: MÃ‰TRICAS */}
+        {/* TAB 3: MÉTRICAS */}
         {tab === "metricas" && evalData && (
           <div className="space-y-6">
             {/* Threshold Selector & KPI Cards */}
@@ -489,11 +489,11 @@ function App() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-slate-100">
                 <div>
                   <h2 className="text-base font-bold text-slate-800">
-                    AvaliaÃ§Ã£o contra o Gabarito ({evalData.rotulados} registros,{" "}
-                    {evalData.pessoas_distintas_gabarito} pessoas Ãºnicas)
+                    Avaliação contra o Gabarito ({evalData.rotulados} registros,{" "}
+                    {evalData.pessoas_distintas_gabarito} pessoas únicas)
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    PolÃ­tica da equipe: priorizar precisÃ£o (zero falsos positivos â€” Ã© melhor deixar
+                    Política da equipe: priorizar precisão (zero falsos positivos — é melhor deixar
                     duplicatas passarem do que fundir pessoas diferentes).
                   </p>
                 </div>
@@ -524,7 +524,7 @@ function App() {
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mt-4">
                 <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="text-xs text-slate-500">RevocaÃ§Ã£o do Blocking</div>
+                  <div className="text-xs text-slate-500">Revocação do Blocking</div>
                   <div className="text-xl font-bold text-slate-900 mt-1">
                     {(evalData.blocking.revocacao_blocking * 100).toFixed(1)}%
                   </div>
@@ -535,7 +535,7 @@ function App() {
                 </div>
 
                 <div className="p-3.5 rounded-lg bg-emerald-50 border border-emerald-200">
-                  <div className="text-xs text-emerald-700 font-medium">PrecisÃ£o</div>
+                  <div className="text-xs text-emerald-700 font-medium">Precisão</div>
                   <div className="text-xl font-bold text-emerald-900 mt-1">
                     {(evalData.metricas_limiar.precisao * 100).toFixed(2)}%
                   </div>
@@ -545,7 +545,7 @@ function App() {
                 </div>
 
                 <div className="p-3.5 rounded-lg bg-blue-50 border border-blue-200">
-                  <div className="text-xs text-blue-700 font-medium">RevocaÃ§Ã£o</div>
+                  <div className="text-xs text-blue-700 font-medium">Revocação</div>
                   <div className="text-xl font-bold text-blue-900 mt-1">
                     {(evalData.metricas_limiar.revocacao * 100).toFixed(2)}%
                   </div>
@@ -555,7 +555,7 @@ function App() {
                 </div>
 
                 <div className="p-3.5 rounded-lg bg-indigo-50 border border-indigo-200">
-                  <div className="text-xs text-indigo-700 font-medium">F0.5 (foco PrecisÃ£o)</div>
+                  <div className="text-xs text-indigo-700 font-medium">F0.5 (foco Precisão)</div>
                   <div className="text-xl font-bold text-indigo-900 mt-1">
                     {(evalData.metricas_limiar.f0_5 * 100).toFixed(2)}%
                   </div>
@@ -596,8 +596,8 @@ function App() {
                       <th className="px-3 py-2">FP</th>
                       <th className="px-3 py-2">FN</th>
                       <th className="px-3 py-2">VN</th>
-                      <th className="px-3 py-2">PrecisÃ£o</th>
-                      <th className="px-3 py-2">RevocaÃ§Ã£o</th>
+                      <th className="px-3 py-2">Precisão</th>
+                      <th className="px-3 py-2">Revocação</th>
                       <th className="px-3 py-2">F1</th>
                       <th className="px-3 py-2">F0.5</th>
                     </tr>
@@ -620,7 +620,7 @@ function App() {
                             {r.limiar_pontos}
                             {r.limiar_pontos === 25 && (
                               <span className="ml-2 px-1.5 py-0.5 text-[10px] rounded bg-emerald-600 text-white">
-                                padrÃ£o
+                                padrão
                               </span>
                             )}
                           </td>
@@ -652,7 +652,7 @@ function App() {
                 </h3>
                 {evalData.fp_detalhes.length === 0 ? (
                   <p className="text-xs text-slate-500">
-                    Nenhum falso positivo neste limiar (PrecisÃ£o = 100%).
+                    Nenhum falso positivo neste limiar (Precisão = 100%).
                   </p>
                 ) : (
                   <div className="space-y-2">
@@ -662,14 +662,14 @@ function App() {
                         className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs space-y-1"
                       >
                         <div className="font-bold text-red-900">
-                          #{p.id_a} Ã— #{p.id_b} â€” {p.pontos} pts ({p.blocos})
+                          #{p.id_a} × #{p.id_b} — {p.pontos} pts ({p.blocos})
                         </div>
                         <div>
-                          A: {p.registro_a.nome} | CPF: {p.registro_a.cpf || "â€”"} | Tel:{" "}
+                          A: {p.registro_a.nome} | CPF: {p.registro_a.cpf || "—"} | Tel:{" "}
                           {p.registro_a.telefone}
                         </div>
                         <div>
-                          B: {p.registro_b.nome} | CPF: {p.registro_b.cpf || "â€”"} | Tel:{" "}
+                          B: {p.registro_b.nome} | CPF: {p.registro_b.cpf || "—"} | Tel:{" "}
                           {p.registro_b.telefone}
                         </div>
                       </div>
@@ -689,15 +689,15 @@ function App() {
                       className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs space-y-1"
                     >
                       <div className="font-bold text-amber-900">
-                        #{p.id_a} Ã— #{p.id_b} â€” {p.pontos} pts (abaixo de {limiar} pts)
+                        #{p.id_a} × #{p.id_b} — {p.pontos} pts (abaixo de {limiar} pts)
                       </div>
                       <div>
                         A ({p.registro_a.sistema_origem}): {p.registro_a.nome} | CPF:{" "}
-                        {p.registro_a.cpf || "â€”"} | Tel: {p.registro_a.telefone}
+                        {p.registro_a.cpf || "—"} | Tel: {p.registro_a.telefone}
                       </div>
                       <div>
                         B ({p.registro_b.sistema_origem}): {p.registro_b.nome} | CPF:{" "}
-                        {p.registro_b.cpf || "â€”"} | Tel: {p.registro_b.telefone}
+                        {p.registro_b.cpf || "—"} | Tel: {p.registro_b.telefone}
                       </div>
                     </div>
                   ))}
@@ -714,10 +714,10 @@ function App() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <h2 className="text-base font-bold text-slate-800">
-                    ExecuÃ§Ã£o nos 3.000 Registros Completos
+                    Execução nos 3.000 Registros Completos
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Dispare o pipeline completo (normalizaÃ§Ã£o, blocking multichave, pontuaÃ§Ã£o e
+                    Dispare o pipeline completo (normalização, blocking multichave, pontuação e
                     clustering) e salve no banco SQLAlchemy.
                   </p>
                 </div>
@@ -742,7 +742,7 @@ function App() {
               {pipelineData && (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mt-5">
                   <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200">
-                    <div className="text-xs text-slate-500">Pares PossÃ­veis</div>
+                    <div className="text-xs text-slate-500">Pares Possíveis</div>
                     <div className="text-lg font-bold text-slate-900 mt-1">
                       {pipelineData.estatisticas.pares_possiveis?.toLocaleString("pt-BR")}
                     </div>
@@ -754,7 +754,7 @@ function App() {
                     </div>
                   </div>
                   <div className="p-3.5 rounded-lg bg-emerald-50 border border-emerald-200">
-                    <div className="text-xs text-emerald-700">ReduÃ§Ã£o do Blocking</div>
+                    <div className="text-xs text-emerald-700">Redução do Blocking</div>
                     <div className="text-lg font-bold text-emerald-900 mt-1">
                       {pipelineData.estatisticas.reducao_pct}%
                     </div>
