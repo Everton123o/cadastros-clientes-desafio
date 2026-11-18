@@ -1,4 +1,4 @@
-"""Modelos SQLAlchemy. Funcionam em MySQL (produção) e SQLite (desenvolvimento)."""
+"""Modelos SQLAlchemy persistidos no MySQL."""
 from __future__ import annotations
 
 from datetime import datetime, timezone

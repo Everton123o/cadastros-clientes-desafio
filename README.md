@@ -1,6 +1,6 @@
 # Deduplicação de Cadastros de Clientes
 
-Pipeline de deduplicação probabilística para os **3.000 registros** de [`data/clientes.csv`](data/clientes.csv) (consolidados de `site`, `loja` e `televendas`), construído com **pandas**, **RapidFuzz**, **FastAPI**, **SQLAlchemy (MySQL / SQLite)**, **pytest** e frontend separado em **React + HTML + Tailwind CSS**.
+Pipeline de deduplicação probabilística para os **3.000 registros** de [`data/clientes.csv`](data/clientes.csv) (consolidados de `site`, `loja` e `televendas`), construído com **pandas**, **RapidFuzz**, **FastAPI**, **SQLAlchemy + MySQL**, **pytest** e frontend separado em **React + HTML + Tailwind CSS**.
 
 ---
 
@@ -30,7 +30,7 @@ Pipeline de deduplicação probabilística para os **3.000 registros** de [`data
 
 ### Pré-requisitos
 - **Python 3.11+**
-- **Docker + Docker Compose** *(opcional — apenas se quiser usar MySQL; sem ele, o sistema usa SQLite local automaticamente)*
+- **Docker + Docker Compose** (obrigatório para iniciar o MySQL)
 - **Node.js 18+** *(opcional — apenas se quiser rodar o servidor de desenvolvimento Vite do frontend; o FastAPI já serve o bundle pronto em `frontend/dist/`)*
 
 ---
@@ -61,22 +61,21 @@ pip install -r requirements.txt
 
 ---
 
-### 2. Configurar o Banco de Dados (SQLite ou MySQL via Docker)
-
-- **SQLite (padrão sem configuração):** não precisa fazer nada — sem arquivo `.env`, o SQLAlchemy cria e usa automaticamente `data/dedup.db`.
-- **MySQL 8.4 via Docker:**
+### 2. Configurar e iniciar o MySQL via Docker
 
 #### macOS e Linux / Windows (Git Bash)
 ```bash
-docker compose up -d
 cp .env.example .env
+docker compose up -d
 ```
 
 #### Windows — PowerShell
 ```powershell
-docker compose up -d
 Copy-Item .env.example .env
+docker compose up -d
 ```
+
+O Compose cria o container `dedup-mysql` com MySQL 8.4, cria o banco e o usuário definidos no `.env`, publica a porta `3306` para a aplicação local e mantém os dados no volume nomeado `mysql_data`. O healthcheck aguarda o servidor MySQL responder. A aplicação Python roda fora do container e conecta em `localhost:3306` usando `DATABASE_URL`.
 
 ---
 

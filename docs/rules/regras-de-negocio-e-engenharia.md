@@ -19,7 +19,7 @@ Resumo consolidado das regras de domínio, estatística e engenharia aplicadas n
 - **Reprodutibilidade:** A amostragem estratificada usa semente fixa (`seed=42`) e todas as execuções do pipeline salvam os pesos e o limiar utilizados na tabela `execucoes`.
 - **Separação de responsabilidades:**
   - `src/dedup/`: funções puras sobre DataFrames pandas (sem dependência de banco ou interface).
-  - `src/storage/`: persistência SQLAlchemy compatível com MySQL e SQLite.
+  - `src/storage/`: persistência SQLAlchemy em MySQL.
   - `src/api/`: endpoints REST FastAPI consumindo `src/dedup/` e `src/storage/`.
   - `frontend/`: aplicação web em React, HTML e Tailwind CSS consumindo a API FastAPI.
 - **Testes automatizados:** Qualquer ajuste em normalização, pesos ou regras de veto deve passar por `pytest` (`tests/test_dedup.py`) e pela verificação de métricas (`python -m src.dedup.pipeline avaliar`).

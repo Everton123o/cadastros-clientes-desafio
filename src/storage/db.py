@@ -1,4 +1,4 @@
-"""Acesso ao banco. A URL vem de DATABASE_URL (.env); sem ela, usa SQLite local."""
+"""Acesso ao banco MySQL. A URL vem de DATABASE_URL (.env)."""
 from __future__ import annotations
 
 import os
@@ -15,7 +15,6 @@ from .models import (
 )
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_URL = f"sqlite:///{(ROOT / 'data' / 'dedup.db').as_posix()}"
 
 _RAW_COLS = ["sistema_origem", "nome", "cpf", "data_nascimento", "telefone", "email", "cidade", "uf"]
 _NORM_COLS = ["n_nome", "n_cpf", "n_cpf_valido", "n_nascimento", "n_fone8", "n_email"]
@@ -25,7 +24,12 @@ _DETAIL_COLS = ["sim_nome", "p_nome", "p_cpf", "cpf", "p_nasc", "nasc", "p_fone"
 
 def get_engine(url: str | None = None) -> Engine:
     load_dotenv(ROOT / ".env")
-    engine = create_engine(url or os.getenv("DATABASE_URL", DEFAULT_URL), future=True)
+    database_url = url or os.getenv("DATABASE_URL")
+    if not database_url:
+        raise RuntimeError("DATABASE_URL não definida. Configure o arquivo .env e inicie o MySQL via Docker Compose.")
+    if not database_url.startswith("mysql+"):
+        raise RuntimeError("Este projeto requer MySQL. Configure DATABASE_URL com um driver mysql+ (ex.: mysql+pymysql).")
+    engine = create_engine(database_url, future=True)
     Base.metadata.create_all(engine)
     return engine
 

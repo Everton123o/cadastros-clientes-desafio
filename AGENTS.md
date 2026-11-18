@@ -40,7 +40,7 @@ cadastros-clientes-desafio/
 │   │   ├── evaluate.py        # Cálculo de VP, FP, FN, VN, Precisão, Revocação, F1, F0.5
 │   │   └── pipeline.py        # CLI: rodar, amostra, importar-gabarito, avaliar
 │   └── storage/
-│       ├── models.py          # Tabelas SQLAlchemy (MySQL / SQLite)
+│       ├── models.py          # Tabelas SQLAlchemy (MySQL)
 │       └── db.py              # Persistência de execuções, grupos e gabarito
 ├── frontend/
 │   ├── index.html             # HTML base do frontend
@@ -65,7 +65,7 @@ cadastros-clientes-desafio/
 2. **Não remover sufixos geracionais unilaterais:** `"FILHO"`, `"NETO"`, `"JUNIOR"` e `"SOBRINHO"` distinguem pais e filhos que moram na mesma cidade e compartilham telefone.
 3. **Proibido transitividade cega:** O agrupamento (`clustering.py`) nunca deve unir dois subgrupos que possuam CPFs distintos (distância OSA > 1), datas de nascimento incompatíveis ou par com pontuação negativa.
 4. **Marcação cega do gabarito:** O endpoint `GET /api/gabarito/amostra` ([`src/api/main.py`](src/api/main.py)) e a tela React ([`frontend/src/App.jsx`](frontend/src/App.jsx)) não devem exibir a pontuação nem a sugestão do algoritmo durante a rotulagem para não enviesar o avaliador humano.
-5. **Banco de dados agnóstico via SQLAlchemy:** Todo acesso a dados passa por `src/storage/db.py` e funciona tanto em SQLite local (padrão sem `.env`) quanto em MySQL (`DATABASE_URL` no `.env`).
+5. **Persistência MySQL via SQLAlchemy:** Todo acesso a dados passa por `src/storage/db.py`; `DATABASE_URL` é obrigatória e aponta para o MySQL iniciado pelo Docker Compose.
 
 ---
 
@@ -75,7 +75,7 @@ cadastros-clientes-desafio/
   - [ADR-0001: Estratégia de Blocking Multichave](docs/adr/0001-blocking-multichave.md)
   - [ADR-0002: Modelo de Pontuação por Evidência Aditiva](docs/adr/0002-pontuacao-evidencia-aditiva.md)
   - [ADR-0003: Agrupamento com Restrições e Escolha de Limiar](docs/adr/0003-agrupamento-com-restricoes-e-limiar.md)
-  - [ADR-0004: Persistência Híbrida MySQL / SQLite com SQLAlchemy](docs/adr/0004-persistencia-mysql-sqlalchemy.md)
+  - [ADR-0004: Persistência MySQL com SQLAlchemy](docs/adr/0004-persistencia-mysql-sqlalchemy.md)
 - **Specs (`docs/specs/`):**
   - [SPEC-01: Normalização, Critérios de Comparação e Pesos](docs/specs/spec-01-normalizacao-e-criterios.md)
   - [SPEC-02: Amostragem Estratificada, Gabarito e Métricas](docs/specs/spec-02-amostragem-gabarito-e-metricas.md)

@@ -12,7 +12,7 @@ flowchart LR
     NORM --> BLOCK["2. Blocking Multichave\nsrc/dedup/blocking.py\n4.498.500 -> 14.947 pares\n(-99,67%)"]
     BLOCK --> SCORE["3. Pontuação (RapidFuzz)\nsrc/dedup/scoring.py\nEvidência aditiva + logística\n(pontos e confiança 0..100%)"]
     SCORE --> CLUST["4. Agrupamento Restrito\nsrc/dedup/clustering.py\nUnion-Find guloso com\nveto de CPF e nascimento"]
-    CLUST --> DB[("MySQL 8.4 / SQLite\nsrc/storage/models.py\nregistros, execucoes,\npares_candidatos, grupos")]
+    CLUST --> DB[("MySQL 8.4 via Docker\nsrc/storage/models.py\nregistros, execucoes,\npares_candidatos, grupos")]
     SCORE --> SAMP["5. Amostra Estratificada\nsrc/dedup/sampling.py\n100 registros (49 vizinhanças)"]
     SAMP --> API["6. API REST FastAPI\nsrc/api/main.py\n/api/gabarito & /api/pipeline"]
     API <--> UI["7. Frontend Separado\nfrontend/ (React + HTML + Tailwind)\nMarcação cega e painel de métricas"]
