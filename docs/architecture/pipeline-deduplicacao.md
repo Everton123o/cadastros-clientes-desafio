@@ -14,8 +14,8 @@ flowchart LR
     SCORE --> CLUST["4. Agrupamento Restrito\nsrc/dedup/clustering.py\nUnion-Find guloso com\nveto de CPF e nascimento"]
     CLUST --> DB[("MySQL 8.4 via Docker\nsrc/storage/models.py\nregistros, execucoes,\npares_candidatos, grupos")]
     SCORE --> SAMP["5. Amostra Estratificada\nsrc/dedup/sampling.py\n100 registros (49 vizinhanças)"]
-    SAMP --> API["6. API REST FastAPI\nsrc/api/main.py\n/api/gabarito & /api/pipeline"]
-    API <--> UI["7. Frontend Separado\nfrontend/ (React + HTML + Tailwind)\nMarcação cega e painel de métricas"]
+    SAMP --> API["6. API REST FastAPI\nsrc/api/main.py\n/api/fusoes, /api/gabarito & /api/pipeline"]
+    API <--> UI["7. Frontend Separado\nfrontend/ (React + HTML + Tailwind)\nRevisão de fusões, histórico/desfazer, gabarito cego e métricas"]
     API --> DB
     DB --> EVAL["8. Avaliação de Limiares\nsrc/dedup/evaluate.py\nVP, FP, FN, Precisão,\nRevocação, F1 e F0.5"]
 ```
@@ -30,6 +30,7 @@ erDiagram
     EXECUCOES ||--o{ PARES_CANDIDATOS : "contém"
     EXECUCOES ||--o{ GRUPOS : "gera"
     GRUPOS ||--o{ GRUPO_MEMBROS : "possui"
+    GRUPOS ||--o{ HISTORICO_FUSOES : "audita"
     REGISTROS ||--o{ GRUPO_MEMBROS : "participa"
     REGISTROS ||--o| GABARITO_AMOSTRA : "sorteado em"
     REGISTROS ||--o| GABARITO_ROTULOS : "rotulado em"

@@ -94,3 +94,86 @@ def test_fastapi_endpoints():
     assert ev["blocking"]["revocacao_blocking"] == 1.0
     assert ev["metricas_limiar"]["FP"] == 0
     assert ev["metricas_limiar"]["precisao"] == 1.0
+
+
+def test_fusion_review_and_undo_workflow(tmp_path, monkeypatch):
+    from sqlalchemy import create_engine
+    from src.api.main import (
+        DesfazerFusaoRequest,
+        RevisarGrupoRequest,
+        desfazer_fusao_historico,
+        listar_grupos_revisao,
+        listar_historico_fusoes,
+        revisar_grupo,
+    )
+    from src.dedup.blocking import blocking_stats
+    from src.dedup.clustering import group_summary
+    from src.dedup.scoring import weights_dict
+    from src.storage import db
+    from src.storage.models import Base
+
+    engine = create_engine(f"sqlite:///{(tmp_path / 'review_test.db').as_posix()}", future=True)
+    Base.metadata.create_all(engine)
+    monkeypatch.setattr(db, "get_engine", lambda url=None: engine)
+
+    raw = pd.DataFrame([
+        {"id_registro": 1, "sistema_origem": "loja", "nome": "José da Silva",
+         "cpf": "04345133009", "data_nascimento": "17/06/2004",
+         "telefone": "(81) 99072-0417", "email": "jose@email.com", "cidade": "RECIFE", "uf": "PE"},
+        {"id_registro": 2, "sistema_origem": "televendas", "nome": "JOSE SILVA",
+         "cpf": "04345133009", "data_nascimento": "",
+         "telefone": "99072-0417", "email": "", "cidade": "Recife", "uf": "PE"},
+        {"id_registro": 3, "sistema_origem": "site", "nome": "José d. Silva",
+         "cpf": "", "data_nascimento": "17/06/2004",
+         "telefone": "81990720417", "email": "jose@email.com", "cidade": "Recife", "uf": "PE"},
+    ])
+    df = normalize_dataframe(raw)
+    pairs = candidate_pairs(df)
+    scored = score_pairs(df, pairs)
+    assign = cluster(df, scored, threshold_points=25.0)
+    summary = group_summary(assign, scored)
+    stats = blocking_stats(len(df), pairs)
+
+    db.save_records(engine, df)
+    db.save_run(engine, scored, summary, 25.0, weights_dict(), stats)
+
+    # 1. Lista grupos propostos com pontuação de confiança
+    gdata = listar_grupos_revisao(status=None, busca=None, limit=50, offset=0)
+    assert gdata["contagem"]["total"] == 1
+    assert gdata["contagem"]["pendente"] == 1
+    grupo = gdata["grupos"][0]
+    grupo_id = grupo["id"]
+    assert grupo["tamanho"] == 3
+    assert grupo["confianca_media"] > 90.0
+    assert grupo["status"] == "pendente"
+    assert len(grupo["membros"]) == 3
+
+    # 2. Operador aprova a fusão na tela de revisão
+    res_approve = revisar_grupo(
+        grupo_id,
+        RevisarGrupoRequest(acao="aprovar", operador="ana", observacao="Mesmo CPF e telefone"),
+    )
+    assert res_approve["grupo"]["status"] == "aprovado"
+
+    # 3. Verifica histórico de fusões
+    hist = listar_historico_fusoes(limit=100)["historico"]
+    assert len(hist) == 1
+    assert hist[0]["acao"] == "aprovada"
+    assert hist[0]["operador"] == "ana"
+    assert hist[0]["status_anterior"] == "pendente"
+    assert hist[0]["status_novo"] == "aprovado"
+    assert len(hist[0]["membros_snapshot"]) == 3
+    hist_id = hist[0]["id"]
+
+    # 4. Operador desfaz a fusão a partir do histórico
+    res_undo = desfazer_fusao_historico(
+        hist_id,
+        DesfazerFusaoRequest(operador="ana", observacao="Desfazendo para revisão adicional"),
+    )
+    assert res_undo["grupo"]["status"] == "pendente"
+
+    # 5. Histórico registra tanto a aprovação quanto a reversão
+    hist2 = listar_historico_fusoes(limit=100)["historico"]
+    assert len(hist2) == 2
+    assert hist2[0]["acao"] == "desfeita"
+    assert hist2[0]["status_novo"] == "pendente"

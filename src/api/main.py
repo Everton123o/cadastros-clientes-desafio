@@ -59,6 +59,17 @@ class SalvarRotulosRequest(BaseModel):
     rotulos: dict[int, str] = Field(..., description="Mapa id_registro -> identificador da pessoa")
 
 
+class RevisarGrupoRequest(BaseModel):
+    acao: str = Field(..., description="Ação a executar no grupo: 'aprovar', 'rejeitar' ou 'desfazer'")
+    operador: str = Field(default="equipe", min_length=1, description="Nome do operador que revisou a fusão")
+    observacao: str | None = Field(default=None, description="Motivo ou observação opcional da decisão")
+
+
+class DesfazerFusaoRequest(BaseModel):
+    operador: str = Field(default="equipe", min_length=1, description="Nome do operador que desfez a fusão")
+    observacao: str | None = Field(default=None, description="Motivo opcional da reversão")
+
+
 @app.get("/api/health")
 def health():
     engine = db.get_engine()
@@ -190,6 +201,82 @@ def avaliar_gabarito(limiar: float = Query(default=DEFAULT_THRESHOLD)):
         "fn_detalhes": enrich(c["fn_pares"]),
         "varredura_limiares": sweep_df.to_dict(orient="records"),
     }
+
+
+@app.get("/api/fusoes/grupos")
+def listar_grupos_revisao(
+    status: str | None = Query(default=None, description="Filtrar por status: pendente, aprovado, rejeitado"),
+    busca: str | None = Query(default=None, description="Filtrar por ID, nome, CPF, telefone, e-mail ou cidade"),
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+):
+    engine = db.get_engine()
+    return db.list_groups_for_review(engine, status=status, busca=busca, limit=limit, offset=offset)
+
+
+@app.post("/api/fusoes/grupos/{grupo_id}/revisar")
+def revisar_grupo(grupo_id: int, payload: RevisarGrupoRequest):
+    operador = payload.operador.strip()
+    if not operador:
+        raise HTTPException(status_code=422, detail="Informe o nome do operador.")
+    engine = db.get_engine()
+    try:
+        return db.review_group(
+            engine,
+            grupo_id=grupo_id,
+            acao=payload.acao,
+            operador=operador,
+            observacao=payload.observacao,
+        )
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/api/fusoes/grupos/{grupo_id}/desfazer")
+def desfazer_fusao_grupo(grupo_id: int, payload: DesfazerFusaoRequest):
+    operador = payload.operador.strip()
+    if not operador:
+        raise HTTPException(status_code=422, detail="Informe o nome do operador.")
+    engine = db.get_engine()
+    try:
+        return db.review_group(
+            engine,
+            grupo_id=grupo_id,
+            acao="desfazer",
+            operador=operador,
+            observacao=payload.observacao,
+        )
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/fusoes/historico")
+def listar_historico_fusoes(limit: int = Query(default=100, ge=1, le=500)):
+    engine = db.get_engine()
+    return {"historico": db.list_fusion_history(engine, limit=limit)}
+
+
+@app.post("/api/fusoes/historico/{historico_id}/desfazer")
+def desfazer_fusao_historico(historico_id: int, payload: DesfazerFusaoRequest):
+    operador = payload.operador.strip()
+    if not operador:
+        raise HTTPException(status_code=422, detail="Informe o nome do operador.")
+    engine = db.get_engine()
+    try:
+        return db.undo_fusion_by_history(
+            engine,
+            historico_id=historico_id,
+            operador=operador,
+            observacao=payload.observacao,
+        )
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 FRONTEND_DIST = ROOT / "frontend" / "dist"

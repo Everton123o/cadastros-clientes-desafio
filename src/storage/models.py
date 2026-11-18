@@ -64,7 +64,7 @@ class ParCandidato(Base):
 
 
 class Grupo(Base):
-    """Grupo proposto pelo pipeline. O status será usado pela tela de revisão (fase 2)."""
+    """Grupo proposto pelo pipeline para revisão humana (aprovar, rejeitar ou desfazer fusão)."""
     __tablename__ = "grupos"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -72,10 +72,15 @@ class Grupo(Base):
     tamanho: Mapped[int] = mapped_column(Integer)
     confianca_media: Mapped[float | None] = mapped_column(Float)
     confianca_min: Mapped[float | None] = mapped_column(Float)
-    status: Mapped[str] = mapped_column(String(20), default="pendente")
+    status: Mapped[str] = mapped_column(String(20), default="pendente", index=True)
+    revisado_por: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    revisado_em: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     execucao: Mapped[Execucao] = relationship(back_populates="grupos")
     membros: Mapped[list["GrupoMembro"]] = relationship(cascade="all, delete-orphan")
+    historico: Mapped[list["HistoricoFusao"]] = relationship(
+        back_populates="grupo", cascade="all, delete-orphan", order_by="HistoricoFusao.id.desc()"
+    )
 
 
 class GrupoMembro(Base):
@@ -83,6 +88,25 @@ class GrupoMembro(Base):
 
     grupo_id: Mapped[int] = mapped_column(ForeignKey("grupos.id", ondelete="CASCADE"), primary_key=True)
     id_registro: Mapped[int] = mapped_column(ForeignKey("registros.id_registro"), primary_key=True)
+
+
+class HistoricoFusao(Base):
+    """Histórico auditável de aprovações, rejeições e reversões (desfazer) de fusões."""
+    __tablename__ = "historico_fusoes"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    grupo_id: Mapped[int] = mapped_column(ForeignKey("grupos.id", ondelete="CASCADE"), index=True)
+    execucao_id: Mapped[int] = mapped_column(ForeignKey("execucoes.id", ondelete="CASCADE"), index=True)
+    acao: Mapped[str] = mapped_column(String(30))  # "aprovada" | "rejeitada" | "desfeita"
+    status_anterior: Mapped[str] = mapped_column(String(20))
+    status_novo: Mapped[str] = mapped_column(String(20))
+    operador: Mapped[str] = mapped_column(String(100))
+    observacao: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    confianca_media: Mapped[float | None] = mapped_column(Float, nullable=True)
+    membros_snapshot: Mapped[list] = mapped_column(JSON)
+    criado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+    grupo: Mapped[Grupo] = relationship(back_populates="historico")
 
 
 class GabaritoAmostra(Base):
