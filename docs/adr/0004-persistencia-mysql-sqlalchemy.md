@@ -16,9 +16,9 @@ A arquitetura alvo utiliza **MySQL 8.4** com **SQLAlchemy 2.0**, mas desenvolved
 
 ## Decisão
 
-1. Modelamos todas as tabelas usando o ORM declarativo do **SQLAlchemy 2.0** em [`src/storage/models.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/storage/models.py), usando tipos portáveis (`Integer`, `Float`, `String`, `Boolean`, `DateTime`, `JSON`).
-2. Fornecemos [`docker-compose.yml`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docker-compose.yml) com MySQL 8.4 configurado em `utf8mb4` e [`.env.example`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/.env.example) com `DATABASE_URL=mysql+pymysql://dedup:dedup123@localhost:3306/dedup_clientes?charset=utf8mb4`.
-3. Em [`src/storage/db.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/storage/db.py), `get_engine()` lê `DATABASE_URL` do ambiente/arquivo `.env` e, caso não esteja definida, utiliza automaticamente `sqlite:///data/dedup.db`.
+1. Modelamos todas as tabelas usando o ORM declarativo do **SQLAlchemy 2.0** em [`src/storage/models.py`](../../src/storage/models.py), usando tipos portáveis (`Integer`, `Float`, `String`, `Boolean`, `DateTime`, `JSON`).
+2. Fornecemos [`docker-compose.yml`](../../docker-compose.yml) com MySQL 8.4 configurado em `utf8mb4` e [`.env.example`](../../.env.example) com `DATABASE_URL=mysql+pymysql://dedup:dedup123@localhost:3306/dedup_clientes?charset=utf8mb4`.
+3. Em [`src/storage/db.py`](../../src/storage/db.py), `get_engine()` lê `DATABASE_URL` do ambiente/arquivo `.env` e, caso não esteja definida, utiliza automaticamente `sqlite:///data/dedup.db`.
 
 ## Consequências
 

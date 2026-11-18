@@ -1,8 +1,6 @@
-﻿const { useEffect, useMemo, useState } = React;
+const { useEffect, useMemo, useState } = React;
 
-const API_BASE =
-  (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_URL) ||
-  (window.location.port === "5173" ? "http://localhost:8000" : "");
+const API_BASE = window.location.port === "5173" ? "http://localhost:8000" : "";
 
 async function apiFetch(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {

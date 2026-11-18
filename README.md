@@ -1,6 +1,6 @@
 # Deduplicação de Cadastros de Clientes
 
-Pipeline de deduplicação probabilística para os **3.000 registros** de [`data/clientes.csv`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/data/clientes.csv) (consolidados de `site`, `loja` e `televendas`), construído com **pandas**, **RapidFuzz**, **FastAPI**, **SQLAlchemy (MySQL / SQLite)**, **pytest** e frontend separado em **React + HTML + Tailwind CSS**.
+Pipeline de deduplicação probabilística para os **3.000 registros** de [`data/clientes.csv`](data/clientes.csv) (consolidados de `site`, `loja` e `televendas`), construído com **pandas**, **RapidFuzz**, **FastAPI**, **SQLAlchemy (MySQL / SQLite)**, **pytest** e frontend separado em **React + HTML + Tailwind CSS**.
 
 ---
 
@@ -28,38 +28,90 @@ Pipeline de deduplicação probabilística para os **3.000 registros** de [`data
 
 ## Como Executar
 
-### 1. Ambiente Python
-```powershell
-python -m venv .venv
-.\.venv\Scripts\activate
+### Pré-requisitos
+- **Python 3.11+**
+- **Docker + Docker Compose** *(opcional — apenas se quiser usar MySQL; sem ele, o sistema usa SQLite local automaticamente)*
+- **Node.js 18+** *(opcional — apenas se quiser rodar o servidor de desenvolvimento Vite do frontend; o FastAPI já serve o bundle pronto em `frontend/dist/`)*
+
+---
+
+### 1. Criar e ativar o ambiente virtual Python
+
+#### macOS e Linux (Terminal / bash / zsh)
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Banco de Dados (SQLite por padrão ou MySQL via Docker)
-Sem arquivo `.env`, o sistema usa automaticamente SQLite em `data/dedup.db`. Para usar o MySQL via Docker:
+#### Windows — PowerShell
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+*(Se o PowerShell bloquear a execução de scripts, rode `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` antes de ativar.)*
+
+#### Windows — Git Bash (MINGW64)
+```bash
+python -m venv .venv
+source .venv/Scripts/activate
+pip install -r requirements.txt
+```
+
+---
+
+### 2. Configurar o Banco de Dados (SQLite ou MySQL via Docker)
+
+- **SQLite (padrão sem configuração):** não precisa fazer nada — sem arquivo `.env`, o SQLAlchemy cria e usa automaticamente `data/dedup.db`.
+- **MySQL 8.4 via Docker:**
+
+#### macOS e Linux / Windows (Git Bash)
+```bash
+docker compose up -d
+cp .env.example .env
+```
+
+#### Windows — PowerShell
 ```powershell
 docker compose up -d
 Copy-Item .env.example .env
 ```
 
-### 3. Comandos do Pipeline
-```powershell
+---
+
+### 3. Rodar o Sistema (Pipeline, API FastAPI, Frontend e Testes)
+
+Com o ambiente virtual `.venv` ativado, os comandos são iguais no **macOS**, **Linux** e **Windows**:
+
+```bash
 # 1. Rodar normalização, blocking, pontuação e agrupamento nos 3.000 registros
 python -m src.dedup.pipeline rodar --limiar 25
 
 # 2. Sortear a amostra estratificada de 100 registros (49 vizinhanças)
 python -m src.dedup.pipeline amostra
 
-# 3. Subir a API FastAPI + Frontend React/Tailwind (http://localhost:8000)
+# 3. Subir a API FastAPI + Frontend React/Tailwind
 uvicorn src.api.main:app --reload --port 8000
+```
 
-# (Opcional) Rodar o servidor de desenvolvimento Vite do frontend em http://localhost:5173
-cd frontend && npm install && npm run dev
+Após subir o servidor, acesse no navegador:
+- **Tela Web (React + Tailwind):** http://127.0.0.1:8000
+- **Documentação interativa da API (Swagger):** http://127.0.0.1:8000/docs
 
-# 4. Avaliar precisão, revocação, FP e FN em múltiplos limiares via CLI
+*(Opcional)* Para rodar o servidor de desenvolvimento Vite do frontend separadamente em `http://localhost:5173`:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+#### Avaliação por linha de comando e Testes
+```bash
+# Avaliar precisão, revocação, FP e FN em múltiplos limiares via CLI
 python -m src.dedup.pipeline avaliar --limiar 25
 
-# 5. Rodar testes automatizados (pipeline + endpoints FastAPI)
+# Rodar todos os testes automatizados (pipeline + endpoints FastAPI)
 pytest
 ```
 
@@ -67,12 +119,12 @@ pytest
 
 ## Documentação Completa
 
-- [`AGENTS.md`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/AGENTS.md) — Diretrizes e regras para agentes e desenvolvedores
-- [`docs/adr/0001-blocking-multichave.md`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/adr/0001-blocking-multichave.md)
-- [`docs/adr/0002-pontuacao-evidencia-aditiva.md`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/adr/0002-pontuacao-evidencia-aditiva.md)
-- [`docs/adr/0003-agrupamento-com-restricoes-e-limiar.md`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/adr/0003-agrupamento-com-restricoes-e-limiar.md)
-- [`docs/adr/0004-persistencia-mysql-sqlalchemy.md`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/adr/0004-persistencia-mysql-sqlalchemy.md)
-- [`docs/specs/spec-01-normalizacao-e-criterios.md`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/specs/spec-01-normalizacao-e-criterios.md)
-- [`docs/specs/spec-02-amostragem-gabarito-e-metricas.md`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/specs/spec-02-amostragem-gabarito-e-metricas.md)
-- [`docs/architecture/pipeline-deduplicacao.md`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/architecture/pipeline-deduplicacao.md)
-- [`docs/rules/regras-de-negocio-e-engenharia.md`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/rules/regras-de-negocio-e-engenharia.md)
+- [`AGENTS.md`](AGENTS.md) — Diretrizes e regras para agentes e desenvolvedores
+- [`docs/adr/0001-blocking-multichave.md`](docs/adr/0001-blocking-multichave.md)
+- [`docs/adr/0002-pontuacao-evidencia-aditiva.md`](docs/adr/0002-pontuacao-evidencia-aditiva.md)
+- [`docs/adr/0003-agrupamento-com-restricoes-e-limiar.md`](docs/adr/0003-agrupamento-com-restricoes-e-limiar.md)
+- [`docs/adr/0004-persistencia-mysql-sqlalchemy.md`](docs/adr/0004-persistencia-mysql-sqlalchemy.md)
+- [`docs/specs/spec-01-normalizacao-e-criterios.md`](docs/specs/spec-01-normalizacao-e-criterios.md)
+- [`docs/specs/spec-02-amostragem-gabarito-e-metricas.md`](docs/specs/spec-02-amostragem-gabarito-e-metricas.md)
+- [`docs/architecture/pipeline-deduplicacao.md`](docs/architecture/pipeline-deduplicacao.md)
+- [`docs/rules/regras-de-negocio-e-engenharia.md`](docs/rules/regras-de-negocio-e-engenharia.md)

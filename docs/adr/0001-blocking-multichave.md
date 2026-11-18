@@ -15,7 +15,7 @@ Embora uma única chave de bloco (por exemplo, primeiro nome) reduzisse o númer
 
 ## Decisão
 
-Adotamos **Multi-Pass Blocking (união de 5 chaves ortogonais)** implementado em [`src/dedup/blocking.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/dedup/blocking.py). Dois registros formam um par candidato se compartilharem **pelo menos uma** das 5 chaves abaixo:
+Adotamos **Multi-Pass Blocking (união de 5 chaves ortogonais)** implementado em [`src/dedup/blocking.py`](../../src/dedup/blocking.py). Dois registros formam um par candidato se compartilharem **pelo menos uma** das 5 chaves abaixo:
 
 | Chave de Bloco | Colunas Normalizadas | Pares Gerados no CSV | Falha que Cobre |
 |---|---|---:|---|

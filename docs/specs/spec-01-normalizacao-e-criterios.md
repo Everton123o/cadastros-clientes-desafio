@@ -1,6 +1,6 @@
 # SPEC-01: Normalização, Critérios de Comparação e Pesos
 
-Esta especificação detalha o comportamento de [`src/dedup/normalize.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/dedup/normalize.py) e [`src/dedup/scoring.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/dedup/scoring.py) a partir do perfil real de `data/clientes.csv`.
+Esta especificação detalha o comportamento de [`src/dedup/normalize.py`](../../src/dedup/normalize.py) e [`src/dedup/scoring.py`](../../src/dedup/scoring.py) a partir do perfil real de `data/clientes.csv`.
 
 ---
 

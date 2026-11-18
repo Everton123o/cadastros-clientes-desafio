@@ -6,7 +6,7 @@ Este documento é a referência central para agentes de IA e desenvolvedores que
 
 ## 1. Contexto e Objetivo do Sistema
 
-O arquivo [`data/clientes.csv`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/data/clientes.csv) reúne **3.000 cadastros** vindos de três sistemas legados (`site`, `loja` e `televendas`):
+O arquivo [`data/clientes.csv`](data/clientes.csv) reúne **3.000 cadastros** vindos de três sistemas legados (`site`, `loja` e `televendas`):
 - A mesma pessoa aparece grafada como `"José da Silva"`, `"JOSE SILVA"`, `"José d. Silva"`, com erros de digitação (`"Manoel aBrros"`, `"BeneditoDias"`) ou iniciais abreviadas (`"Eduardo Q. R. Barbosa"`).
 - Telefones aparecem com e sem DDD (`(82) 98431-2819`, `82984312819`, `98431-2819`).
 - **35,5%** dos registros não têm CPF (`1.064`), **39,7%** não têm e-mail (`1.192`), **17,0%** não têm data de nascimento (`510`) e **40 CPFs** preenchidos têm dígito verificador inválido (erro de digitação em 1 dígito).
@@ -64,7 +64,7 @@ cadastros-clientes-desafio/
 1. **Campos vazios são neutros (0 ponto):** Nunca penalize um par porque um dos lados não tem CPF, data de nascimento ou e-mail.
 2. **Não remover sufixos geracionais unilaterais:** `"FILHO"`, `"NETO"`, `"JUNIOR"` e `"SOBRINHO"` distinguem pais e filhos que moram na mesma cidade e compartilham telefone.
 3. **Proibido transitividade cega:** O agrupamento (`clustering.py`) nunca deve unir dois subgrupos que possuam CPFs distintos (distância OSA > 1), datas de nascimento incompatíveis ou par com pontuação negativa.
-4. **Marcação cega do gabarito:** O endpoint `GET /api/gabarito/amostra` ([`src/api/main.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/api/main.py)) e a tela React ([`frontend/src/App.jsx`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/frontend/src/App.jsx)) não devem exibir a pontuação nem a sugestão do algoritmo durante a rotulagem para não enviesar o avaliador humano.
+4. **Marcação cega do gabarito:** O endpoint `GET /api/gabarito/amostra` ([`src/api/main.py`](src/api/main.py)) e a tela React ([`frontend/src/App.jsx`](frontend/src/App.jsx)) não devem exibir a pontuação nem a sugestão do algoritmo durante a rotulagem para não enviesar o avaliador humano.
 5. **Banco de dados agnóstico via SQLAlchemy:** Todo acesso a dados passa por `src/storage/db.py` e funciona tanto em SQLite local (padrão sem `.env`) quanto em MySQL (`DATABASE_URL` no `.env`).
 
 ---
@@ -72,13 +72,13 @@ cadastros-clientes-desafio/
 ## 4. Mapa da Documentação (`docs/`)
 
 - **ADRs (`docs/adr/`):**
-  - [ADR-0001: Estratégia de Blocking Multichave](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/adr/0001-blocking-multichave.md)
-  - [ADR-0002: Modelo de Pontuação por Evidência Aditiva](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/adr/0002-pontuacao-evidencia-aditiva.md)
-  - [ADR-0003: Agrupamento com Restrições e Escolha de Limiar](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/adr/0003-agrupamento-com-restricoes-e-limiar.md)
-  - [ADR-0004: Persistência Híbrida MySQL / SQLite com SQLAlchemy](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/adr/0004-persistencia-mysql-sqlalchemy.md)
+  - [ADR-0001: Estratégia de Blocking Multichave](docs/adr/0001-blocking-multichave.md)
+  - [ADR-0002: Modelo de Pontuação por Evidência Aditiva](docs/adr/0002-pontuacao-evidencia-aditiva.md)
+  - [ADR-0003: Agrupamento com Restrições e Escolha de Limiar](docs/adr/0003-agrupamento-com-restricoes-e-limiar.md)
+  - [ADR-0004: Persistência Híbrida MySQL / SQLite com SQLAlchemy](docs/adr/0004-persistencia-mysql-sqlalchemy.md)
 - **Specs (`docs/specs/`):**
-  - [SPEC-01: Normalização, Critérios de Comparação e Pesos](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/specs/spec-01-normalizacao-e-criterios.md)
-  - [SPEC-02: Amostragem Estratificada, Gabarito e Métricas](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/specs/spec-02-amostragem-gabarito-e-metricas.md)
+  - [SPEC-01: Normalização, Critérios de Comparação e Pesos](docs/specs/spec-01-normalizacao-e-criterios.md)
+  - [SPEC-02: Amostragem Estratificada, Gabarito e Métricas](docs/specs/spec-02-amostragem-gabarito-e-metricas.md)
 - **Arquitetura e Regras:**
-  - [Arquitetura do Pipeline de Deduplicação](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/architecture/pipeline-deduplicacao.md)
-  - [Regras de Negócio e Engenharia](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/docs/rules/regras-de-negocio-e-engenharia.md)
+  - [Arquitetura do Pipeline de Deduplicação](docs/architecture/pipeline-deduplicacao.md)
+  - [Regras de Negócio e Engenharia](docs/rules/regras-de-negocio-e-engenharia.md)

@@ -13,7 +13,7 @@ Mesmo com uma boa pontuação par-a-par, dois problemas clássicos surgem ao for
 
 ## Decisão
 
-1. **Union-Find Guloso com Veto de Conflitos ([`src/dedup/clustering.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/dedup/clustering.py)):**
+1. **Union-Find Guloso com Veto de Conflitos ([`src/dedup/clustering.py`](../../src/dedup/clustering.py)):**
    - Ordenamos os pares candidatos com `pontos >= limiar` da **maior para a menor pontuação**.
    - Dois grupos $G_a$ e $G_b$ **são impedidos de se fundir (veto)** se:
      - possuírem CPFs com distância de edição (OSA) $> 1$; ou

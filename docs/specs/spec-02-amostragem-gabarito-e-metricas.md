@@ -1,6 +1,6 @@
 # SPEC-02: Amostragem Estratificada, Gabarito e Métricas de Avaliação
 
-Esta especificação documenta o desenho da amostra de 100 registros ([`src/dedup/sampling.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/dedup/sampling.py)), a API FastAPI ([`src/api/main.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/api/main.py)), o frontend em React + HTML + Tailwind CSS ([`frontend/src/App.jsx`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/frontend/src/App.jsx)) e o cálculo de precisão e revocação ([`src/dedup/evaluate.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/dedup/evaluate.py)).
+Esta especificação documenta o desenho da amostra de 100 registros ([`src/dedup/sampling.py`](../../src/dedup/sampling.py)), a API FastAPI ([`src/api/main.py`](../../src/api/main.py)), o frontend em React + HTML + Tailwind CSS ([`frontend/src/App.jsx`](../../frontend/src/App.jsx)) e o cálculo de precisão e revocação ([`src/dedup/evaluate.py`](../../src/dedup/evaluate.py)).
 
 ---
 
@@ -10,7 +10,7 @@ Se escolhêssemos $n = 100$ registros de forma puramente aleatória dentre $N = 
 - A fração de pares que caem juntos na amostra é $\approx (100/3000)^2 \approx 0{,}11\%$.
 - Como o dataset inteiro possui cerca de $1.100$ pares duplicados, uma amostra aleatória simples conteria apenas **1 par duplicado verdadeiro** em média, tornando impossível medir revocação e precisão com significância estatística.
 
-Por isso, [`stratified_sample`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/dedup/sampling.py#L40-L108) sorteia **vizinhanças completas** (componentes conexos de pares com `pontos >= 0`) divididas em 4 estratos:
+Por isso, [`stratified_sample`](../../src/dedup/sampling.py#L40-L108) sorteia **vizinhanças completas** (componentes conexos de pares com `pontos >= 0`) divididas em 4 estratos:
 
 | Estrato | Critério de Seleção | Registros na Amostra | Papel na Avaliação |
 |---|---|---:|---|

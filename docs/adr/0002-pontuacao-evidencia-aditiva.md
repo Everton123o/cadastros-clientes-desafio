@@ -17,7 +17,7 @@ Nos 3.000 registros consolidados de `site`, `loja` e `televendas`:
 
 ## Decisão
 
-Implementamos em [`src/dedup/scoring.py`](file:///c:/Users/pedro/Desktop/cod/cadastros-clientes-desafio/src/dedup/scoring.py) um **modelo aditivo de pesos de evidência** (inspirado em Fellegi-Sunter):
+Implementamos em [`src/dedup/scoring.py`](../../src/dedup/scoring.py) um **modelo aditivo de pesos de evidência** (inspirado em Fellegi-Sunter):
 
 1. **Neutralidade de campos ausentes:** Se qualquer um dos dois registros tiver o campo vazio, a contribuição daquele critério é exatamente `0` ponto (não ajuda nem atrapalha).
 2. **Similaridade de nome híbrida (`name_similarity`):**
